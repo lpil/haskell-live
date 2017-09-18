@@ -1,0 +1,38 @@
+name: haskell-live
+version: 0.1.0
+license: GPL-3
+author: Louis Pilfold
+maintainer: Louis Pilfold <louis@lpil.uk>
+copyright: 2017 - Present Louis Pilfold
+github: lpil/haskell-live
+extra-source-files:
+- README.md
+
+dependencies:
+- base
+- protolude
+- ghcid
+
+default-extensions:
+- NoImplicitPrelude
+- OverloadedStrings
+
+library:
+  source-dirs:
+  - src
+
+executables:
+  haskell-live:
+    main: Main.hs
+    source-dirs: app
+    dependencies:
+    - haskell-live
+
+tests:
+  test:
+    main: Spec.hs
+    source-dirs: test
+    dependencies:
+    - haskell-live
+    - hspec
+    - QuickCheck
