@@ -23,24 +23,29 @@ source-repository head
 library
   hs-source-dirs:
       src
-  default-extensions: NoImplicitPrelude OverloadedStrings
+  default-extensions: NoImplicitPrelude OverloadedStrings MultiWayIf LambdaCase
   build-depends:
       base
     , protolude
     , ghcid
+    , text
+    , network
   exposed-modules:
       Language.Haskell.Live
+      Language.Haskell.Live.Internal
   default-language: Haskell2010
 
 executable haskell-live
   main-is: Main.hs
   hs-source-dirs:
       app
-  default-extensions: NoImplicitPrelude OverloadedStrings
+  default-extensions: NoImplicitPrelude OverloadedStrings MultiWayIf LambdaCase
   build-depends:
       base
     , protolude
     , ghcid
+    , text
+    , network
     , haskell-live
   default-language: Haskell2010
 
@@ -49,14 +54,17 @@ test-suite test
   main-is: Spec.hs
   hs-source-dirs:
       test
-  default-extensions: NoImplicitPrelude OverloadedStrings
+  default-extensions: NoImplicitPrelude OverloadedStrings MultiWayIf LambdaCase
   build-depends:
       base
     , protolude
     , ghcid
+    , text
+    , network
     , haskell-live
     , hspec
     , QuickCheck
   other-modules:
+      Language.Haskell.Live.InternalSpec
       UniverseSpec
   default-language: Haskell2010

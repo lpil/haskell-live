@@ -12,10 +12,14 @@ dependencies:
 - base
 - protolude
 - ghcid
+- text
+- network
 
 default-extensions:
 - NoImplicitPrelude
 - OverloadedStrings
+- MultiWayIf
+- LambdaCase
 
 library:
   source-dirs:

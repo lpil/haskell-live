@@ -1,23 +1,22 @@
 module Language.Haskell.Live
-  ( run
+  ( Live.Session
+  , run
+  , Live.eval
+  , Live.start
+  , Live.stop
   ) where
 
 import Control.Category ((>>>))
 import Data.String (String)
-import qualified Language.Haskell.Ghcid as Ghcid
+import Language.Haskell.Live.Internal as Live
+import Language.Haskell.Live.Internal ((|>))
 import Protolude
 
-(|>) :: a -> (a -> c) -> c
-(|>) = flip ($)
-
 run :: IO ()
-run = bracket startGhci Ghcid.stopGhci runLive
+run = bracket Live.start Live.stop evalStatements
 
-startGhci :: IO Ghcid.Ghci
-startGhci = Ghcid.startGhci "ghci" Nothing (\_ _ -> pure ()) |> fmap fst
-
-runLive :: Ghcid.Ghci -> IO ()
-runLive ghci =
+evalStatements :: Live.Session -> IO ()
+evalStatements session =
   [ "1 + 1"
   , "1 + 1"
   , "1 + 1"
@@ -27,13 +26,13 @@ runLive ghci =
   , "1 + 1"
   , "1 + 1"
   , "1 + 1"
-  , "pack []"
+  , "pack \"hello\""
   , "import Data.Text"
-  , "pack []"
+  , "undefined"
+  , "pack \"hello\""
   ] |>
-  mapM_ (execPrint ghci)
+  mapM_ (evalLine session)
 
-execPrint :: Ghcid.Ghci -> String -> IO ()
-execPrint ghci source = do
-  result <- Ghcid.exec ghci source
-  (intersperse "\n" >>> mconcat >>> putStrLn) result
+evalLine :: Session -> String -> IO ()
+evalLine session source =
+  Live.eval session source |> fmap show >>= (putStrLn :: String -> IO ())
